@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -52,10 +55,22 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         ListView listView = (ListView)findViewById(R.id.listView); //creating a new ListView object
         //and CONNECTING it to the listView in XML
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.hm.thunderbird.notes", Context.MODE_PRIVATE);
+        HashSet<String> set = new HashSet<>(MainActivity.notes);
 
-        notes.add("Example Note");
+        notes.add("Hai");
+        if(set==null)
+        {
+            notes.add("Example Note");
+        }
+        else
+        {
+            notes = new ArrayList<>(set); // to bring all the already stored data in the set to the notes ArrayList
+        }
+
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, notes);
         listView.setAdapter(arrayAdapter);
 
@@ -68,6 +83,8 @@ public class MainActivity extends AppCompatActivity
              intent.putExtra("noteID", position); //to tell us which row of listView was tapped
              startActivity(intent);
             }
+
+
         });
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
@@ -85,6 +102,10 @@ public class MainActivity extends AppCompatActivity
                             {
                                 notes.remove(position);
                                 arrayAdapter.notifyDataSetChanged();
+
+                                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.hm.thunderbirds.notes", Context.MODE_PRIVATE);
+                                HashSet<String> set = new HashSet<>(MainActivity.notes);
+                                sharedPreferences.edit().putStringSet("notes",set).apply();
                             }
                         })
 
