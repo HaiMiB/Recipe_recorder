@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         ListView listView = (ListView)findViewById(R.id.listView); //creating a new ListView object
         //and CONNECTING it to the listView in XML
 
